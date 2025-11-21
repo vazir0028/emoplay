@@ -1,0 +1,8 @@
+deepface
+Pillow
+numpy
+tensorflow
+keras
+opencv-python-headless
+retina-face
+mtcnn
