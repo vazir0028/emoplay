@@ -5,9 +5,9 @@ from PIL import Image
 
 st.set_page_config(page_title="EmoPlay", layout="centered")
 st.title("🎵 EmoPlay – Music That Matches Your Mood")
-st.write("**Camera on karo → Smile/Sad/Angry karo → Songs change ho jayenge!**")
+st.markdown("**Camera on karo → Smile/Sad/Angry try karo → Songs auto change!**")
 
-# Spotify playlists for moods
+# Spotify playlists for different moods
 playlists = {
     "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",
     "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",
@@ -19,33 +19,40 @@ playlists = {
 }
 
 # Camera input
-img_file = st.camera_input("📸 Take a selfie for mood detection")
+img_file = st.camera_input("📸 Take a selfie for emotion detection")
 
 if img_file is not None:
-    # Load image
+    # Load image from camera
     image = Image.open(img_file)
     img_array = np.array(image)
 
-    # Detect emotion
-    with st.spinner("🔍 Detecting your mood..."):
+    # Detect emotion with fixed backend (opencv = fast & no conflict)
+    with st.spinner("🔍 Detecting your emotion..."):
         try:
-            result = DeepFace.analyze(img_array, actions=['emotion'], enforce_detection=False, silent=True)
+            result = DeepFace.analyze(
+                img_array, 
+                actions=['emotion'], 
+                enforce_detection=False, 
+                silent=True,
+                detector_backend='opencv'  # Yeh fix hai – retinaface ki jagah opencv use kar rahe hain
+            )
             emotion = result[0]['dominant_emotion']
         except Exception as e:
-            st.error(f"Error detecting mood: {e}")
+            st.error(f"Detection error: {e}")
             emotion = "neutral"
 
-    # Show results
-    st.image(image, caption=f"Detected Mood: {emotion.upper()}", use_column_width=True)
-    st.success(f"🎭 You are feeling **{emotion.upper()}**!")
+    # Display results
+    st.image(image, caption=f"Detected Emotion: {emotion.upper()}", use_column_width=True)
+    st.success(f"🎭 You're feeling **{emotion.upper()}** right now!")
     
-    # Play playlist
-    st.write("### 🎶 Now Playing: Songs for Your Mood")
-    st.components.v1.iframe(playlists.get(emotion, playlists["neutral"]), height=380, scrolling=False)
+    # Play matching Spotify playlist
+    st.write("### 🎶 Now Playing: Perfect Songs For Your Mood")
+    playlist_url = playlists.get(emotion.lower(), playlists["neutral"])
+    st.components.v1.iframe(playlist_url, height=380, scrolling=False)
 
 else:
-    st.info("👆 Camera allow karo aur photo lo – mood detect hoga!")
+    st.info("👆 Camera allow karo aur ek photo lo – mood detect hoga!")
 
-# Footer
+# Project footer
 st.markdown("---")
-st.caption("✨ Made by **Vazir** | BTech CSE | Machine Learning Project 2025")
+st.caption("✨ Built by **Vazir** | BTech CSE | ML Project 2025 | Tech: DeepFace + Streamlit + Spotify")
