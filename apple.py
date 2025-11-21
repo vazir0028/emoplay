@@ -5,8 +5,9 @@ from PIL import Image
 
 st.set_page_config(page_title="EmoPlay", layout="centered")
 st.title("EmoPlay – Music That Matches Your Mood")
-st.write("Camera on kar → mood detect → songs change!")
+st.write("Camera on karo → mood detect hoga → songs change ho jayenge!")
 
+# Mood playlists
 playlists = {
     "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",
     "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",
@@ -27,11 +28,11 @@ if img_file:
     except:
         emotion = "neutral"
     
-    st.image(img, caption=f"Detected: {emotion.upper()}", use_column_width=True)
-    st.success(f"Your Mood → {emotion.upper()}")
-    st.write("### Playing songs for your mood")
+    st.image(img, caption=f"Your Mood: {emotion.upper()}", use_column_width=True)
+    st.success(f"Detected → {emotion.upper()}")
+    st.write("### Playing Perfect Songs For Your Mood")
     st.components.v1.iframe(playlists.get(emotion, playlists["neutral"]), height=380)
 else:
-    st.info("Camera chalu karo bhai!")
+    st.info("Camera on karo bhai!")
 
 st.caption("Made by Vazir | BTech CSE | 2025")
