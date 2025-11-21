@@ -1,36 +1,37 @@
 import streamlit as st
-import cv2
 from deepface import DeepFace
 import numpy as np
+from PIL import Image
 
 st.set_page_config(page_title="EmoPlay", layout="centered")
 st.title("EmoPlay – Music That Matches Your Mood")
-st.write("Allow camera → look at webcam → songs change with your emotion!")
+st.write("Camera on kar → mood detect → songs change!")
 
 playlists = {
-    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC?utm_source=generator",
-    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1?utm_source=generator",
-    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator",
-    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator",
-    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXa2PvUpywmrr?utm_source=generator",
-    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned?utm_source=generator",
-    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator"
+    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",
+    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",
+    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg",
+    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL",
+    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXa2PvUpywmrr",
+    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned",
+    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg"
 }
 
-img_file_buffer = st.camera_input(" ")
+img_file = st.camera_input(" ")
 
-if img_file_buffer is not None:
-    bytes_data = img_file_buffer.getvalue()
-    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-    
+if img_file:
+    img = Image.open(img_file)
+    arr = np.array(img)
     try:
-        result = DeepFace.analyze(cv2_img, actions=['emotion'], enforce_detection=False, silent=True)
-        emotion = result[0]['dominant_emotion']
+        emotion = DeepFace.analyze(arr, actions=['emotion'], enforce_detection=False, silent=True)[0]['dominant_emotion']
     except:
         emotion = "neutral"
     
-    st.write(f"### Detected Mood → **{emotion.upper()}**")
-    st.write("#### Now Playing Perfect Songs For Your Mood ↓")
+    st.image(img, caption=f"Detected: {emotion.upper()}", use_column_width=True)
+    st.success(f"Your Mood → {emotion.upper()}")
+    st.write("### Playing songs for your mood")
     st.components.v1.iframe(playlists.get(emotion, playlists["neutral"]), height=380)
 else:
-    st.write("Waiting for camera… click the camera above")
+    st.info("Camera chalu karo bhai!")
+
+st.caption("Made by Vazir | BTech CSE | 2025")
