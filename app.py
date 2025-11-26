@@ -6,13 +6,13 @@ import random
 
 # --- CONFIGURATION ---
 st.set_page_config(
-    page_title="EmoPlay - Music for Your Mood",
+    page_title="EmoPlay - Music for Your Mood (Bollywood Edition)",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# Spotify playlist mapping (official curated playlists)
-PLAYLISTS = {
+# Spotify playlist mapping for International Hits (Original Placeholders)
+INT_PLAYLISTS = {
     "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",  # Happy Hits
     "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",  # Sad Songs
     "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg",  # Rock/Intense
@@ -21,25 +21,24 @@ PLAYLISTS = {
     "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned",  # Dark/Spooky
     "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg"   # Heavy
 }
-# --- END CONFIGURATION ---
 
-# --- SIMULATED COMPUTER VISION ANALYSIS ---
+# **NEW FEATURE: Bollywood Playlist Mapping (Simulated/Placeholder Links)**
+BOLLYWOOD_PLAYLISTS = {
+    "happy":    "http://googleusercontent.com/spotify.com/bollywood_happy",    # Example: Balam Pichkari, Badtameez Dil
+    "sad":      "http://googleusercontent.com/spotify.com/bollywood_sad",      # Example: Channa Mereya, Tujhe Bhula Diya
+    "angry":    "http://googleusercontent.com/spotify.com/bollywood_angry",    # Example: Aarambh Hai Prachand, Sadda Haq
+    "neutral":  "http://googleusercontent.com/spotify.com/bollywood_chill",    # Example: Khwabon Ke Parindey, Dil Chahta Hai
+    "surprise": "http://googleusercontent.com/spotify.com/bollywood_energetic",# Example: Gallan Goodiyaan, Kar Gayi Chull
+    "fear":     "http://googleusercontent.com/spotify.com/bollywood_dark",     # Example: Gali Gali, Raat Ka Nasha
+    "disgust":  "http://googleusercontent.com/spotify.com/bollywood_heavy"     # Example: Emotional/Heavy songs like angry/sad
+}
+
+# --- SIMULATED COMPUTER VISION ANALYSIS (Same as before) ---
 def analyze_image_for_cv_features(image_file):
-    """
-    SIMULATION FUNCTION: In a real application, this is where you would call
-    your trained Computer Vision models (e.g., Keras/TensorFlow model) to:
-    1. Detect if a mask is present.
-    2. Detect the emotion and its confidence level.
-    """
-    # 1. Simulate Mask Detection
-    # Roughly 20% chance of detecting a mask in the simulation
+    """Simulate emotion detection and confidence."""
     mask_present = random.random() < 0.2
-    
-    # 2. Simulate Emotion Detection and Confidence
-    mood = random.choice(list(PLAYLISTS.keys()))
-    # Confidence level between 0.60 and 0.99
+    mood = random.choice(list(INT_PLAYLISTS.keys()))
     confidence = round(random.uniform(0.60, 0.99), 2)
-    
     return mood, confidence, mask_present
 # --- END SIMULATION ---
 
@@ -47,7 +46,19 @@ def analyze_image_for_cv_features(image_file):
 
 st.title("EmoPlay 🎶")
 st.markdown("### Let your face choose the music")
-st.write("Take a selfie or select your current mood — matching Spotify playlist starts instantly.")
+
+# **NEW FEATURE: Genre Selection Radio Button**
+genre_choice = st.radio(
+    "Choose Your Vibe:",
+    options=["International Hits", "Bollywood"],
+    horizontal=True,
+    index=1 # Default to Bollywood as requested
+)
+
+# Set the current playlist dictionary based on choice
+CURRENT_PLAYLISTS = BOLLYWOOD_PLAYLISTS if genre_choice == "Bollywood" else INT_PLAYLISTS
+
+st.write("Take a selfie or select your current mood — matching playlist starts instantly.")
 
 # Camera input
 img_file = st.camera_input("📸 Take a selfie for automatic mood detection")
@@ -61,33 +72,34 @@ if img_file:
     detected_mood, confidence, mask_present = analyze_image_for_cv_features(img_file)
 
     if mask_present:
-        # **NEW FEATURE: Mask Warning**
         st.warning(
             "⚠️ **Mask Detected!** Emotion detection may be unreliable. "
             "Please remove your mask for accurate analysis or select your mood manually."
         )
-        mood = st.selectbox("How are you feeling right now?", options=list(PLAYLISTS.keys()), index=3)
+        # Manual selection still uses the dictionary keys
+        mood = st.selectbox("How are you feeling right now?", options=list(CURRENT_PLAYLISTS.keys()), index=3)
         st.info("Using manually selected mood.")
 
     else:
-        # Display the result if no mask is detected
+        # Mood detected successfully
         mood = detected_mood
         st.success(f"✅ Detected mood: **{mood.upper()}**")
         
-        # **NEW FEATURE: Confidence Level Meter**
+        # Confidence Level Meter
         st.metric(label="Detection Confidence", value=f"{int(confidence*100)}%")
         st.progress(confidence, text="Confidence Level")
 
 else:
     st.info("Or select your mood manually below")
     # Manual mood selection is the fallback
-    mood = st.selectbox("How are you feeling right now?", options=list(PLAYLISTS.keys()), index=3)
+    mood = st.selectbox("How are you feeling right now?", options=list(CURRENT_PLAYLISTS.keys()), index=3)
 
 # Display and play the matching playlist
 if mood:
     st.markdown("---")
-    st.markdown("### Now Playing ▶️")
-    st.components.v1.iframe(PLAYLISTS[mood], height=380)
+    st.markdown(f"### Now Playing: **{mood.upper()} {genre_choice} Playlist** ▶️")
+    # Use the selected playlist based on the genre choice
+    st.components.v1.iframe(CURRENT_PLAYLISTS[mood], height=380)
 
 # Footer
 st.markdown("---")
