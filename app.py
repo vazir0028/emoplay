@@ -86,4 +86,4 @@ if mood:
     st.components.v1.iframe(CURRENT_PLAYLISTS[mood], height=380)
 # Footer
 st.markdown("---")
-st.caption("Built by **Vazir** • B.Tech CSE 2025 | Full ML + Live Webcam version available on Google Colab") add the round box that are shows the where you put your face 
+st.caption("Built by **Vazir** • B.Tech CSE 2025 | Full ML + Live Webcam version available on Google Colab")  
