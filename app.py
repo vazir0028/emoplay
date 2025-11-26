@@ -29,11 +29,16 @@ INT_PLAYLISTS = {
 BOLLYWOOD_PLAYLISTS = {
     "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Bollywood Dance
     "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DXca8AM0c05a1", # Bollywood Sad
-    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX7sI57iHQdM6", # Workout/Power
+    
+    # UPDATED: Bollywood Workout for "Angry" (High Intensity, Zinda/Sadda Haq vibes)
+    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX7sI57iHQdM6", 
+    
     "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DXd8cOUiya1cg", # Bollywood Acoustic
     "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Party
     "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Horror themes
-    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy
+    
+    # UPDATED: Punjabi X for "Disgust" (Loud, Brash, Heavy Beats)
+    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DWTq0vE13F9XQ"  
 }
 
 # --- SIMULATED COMPUTER VISION ANALYSIS ---
