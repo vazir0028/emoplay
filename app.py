@@ -1,111 +1,89 @@
 # app.py - EmoPlay: Emotion-Based Music Player
 # Author: Vazir | B.Tech CSE 2025
 import streamlit as st
-import streamlit.components.v1 as components
 import random
-
 # --- CONFIGURATION ---
 st.set_page_config(
-    page_title="EmoPlay - Music for Your Mood",
+    page_title="EmoPlay - Music for Your Mood (Bollywood Edition)",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
-
-# --- REAL SPOTIFY EMBED LINKS ---
-# I have replaced the broken placeholders with REAL Spotify Embed URLs.
-# To get your own: Go to Spotify > Share > Embed Track > Copy the 'src' link.
-
-# International Hits
+# Spotify playlist mapping for International Hits (Original Placeholders)
 INT_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/track/60nZcImufyMA1KT4eGO2Tv", # Happy - Pharrell Williams
-    "sad":      "https://open.spotify.com/embed/track/7qEHsqek33rTcFNT9PFqLf", # Someone You Loved - Lewis Capaldi
-    "angry":    "https://open.spotify.com/embed/track/3hgl7EQwTutSm6PESsB7gZ", # Seven Nation Army
-    "neutral":  "https://open.spotify.com/embed/track/2374M0fQpWi3dLnB54qaLX", # Africa - Toto
-    "surprise": "https://open.spotify.com/embed/track/32OlwWuMpZ6b0aN2RZOeMS", # Uptown Funk
-    "fear":     "https://open.spotify.com/embed/track/3ZSuyGGqBDTEFlK7qCa1tq", # Thriller
-    "disgust":  "https://open.spotify.com/embed/track/2zYzyRzz6pKOfBXM3J2T02"  # Highway to Hell
+    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",  # Happy Hits
+    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",  # Sad Songs
+    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg",  # Rock/Intense
+    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL",  # Chill Vibes
+    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXa2PvUpywmrr",  # Energetic
+    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned",  # Dark/Spooky
+    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg"   # Heavy
 }
-
-# Bollywood Hits
+# **NEW FEATURE: Bollywood Playlist Mapping (Simulated/Placeholder Links)**
 BOLLYWOOD_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/track/7cVp5X1sO2aB0xS0w1R6aA", # Badtameez Dil
-    "sad":      "https://open.spotify.com/embed/track/0Rz3Lp7QZ3M0W1R6aA", # Channa Mereya
-    "angry":    "https://open.spotify.com/embed/track/5nNmjCZCqO2jRcfkGfb5Hl", # Sadda Haq
-    "neutral":  "https://open.spotify.com/embed/track/4bdQG3Tj6o0c3X5o6ZzD3e", # Kun Faya Kun
-    "surprise": "https://open.spotify.com/embed/track/1wNvdFT4RNv6mCN9uJtLgM", # Gallan Goodiyaan
-    "fear":     "https://open.spotify.com/embed/track/6Qe8F1J0B2L1vF3yG4nK5q", # Gali Gali
-    "disgust":  "https://open.spotify.com/embed/track/5nNmjCZCqO2jRcfkGfb5Hl"  # Reuse Sadda Haq
+    "happy":    "http://googleusercontent.com/spotify.com/bollywood_happy",    # Example: Balam Pichkari, Badtameez Dil
+    "sad":      "http://googleusercontent.com/spotify.com/bollywood_sad",      # Example: Channa Mereya, Tujhe Bhula Diya
+    "angry":    "http://googleusercontent.com/spotify.com/bollywood_angry",    # Example: Aarambh Hai Prachand, Sadda Haq
+    "neutral":  "http://googleusercontent.com/spotify.com/bollywood_chill",    # Example: Khwabon Ke Parindey, Dil Chahta Hai
+    "surprise": "http://googleusercontent.com/spotify.com/bollywood_energetic",# Example: Gallan Goodiyaan, Kar Gayi Chull
+    "fear":     "http://googleusercontent.com/spotify.com/bollywood_dark",     # Example: Gali Gali, Raat Ka Nasha
+    "disgust":  "http://googleusercontent.com/spotify.com/bollywood_heavy"     # Example: Emotional/Heavy songs like angry/sad
 }
-
-# --- SIMULATED COMPUTER VISION ANALYSIS ---
+# --- SIMULATED COMPUTER VISION ANALYSIS (Same as before) ---
 def analyze_image_for_cv_features(image_file):
     """Simulate emotion detection and confidence."""
-    # FIX: Removed the hardcoded 'sad' variable so the app is dynamic again.
-    
-    possible_moods = list(INT_PLAYLISTS.keys())
-    
-    # 10% chance of detecting a mask
-    mask_present = random.random() < 0.1 
-    
-    # Randomly pick a mood for simulation purposes
-    mood = random.choice(possible_moods) 
-    
-    confidence = round(random.uniform(0.80, 0.99), 2)
+    mask_present = random.random() < 0.2
+    mood = random.choice(list(INT_PLAYLISTS.keys()))
+    confidence = round(random.uniform(0.60, 0.99), 2)
     return mood, confidence, mask_present
-
+# --- END SIMULATION ---
 # --- APP LAYOUT ---
 st.title("EmoPlay 🎶")
 st.markdown("### Let your face choose the music")
-
-# Genre Selection
+# **NEW FEATURE: Genre Selection Radio Button**
 genre_choice = st.radio(
     "Choose Your Vibe:",
     options=["International Hits", "Bollywood"],
     horizontal=True,
-    index=1 
+    index=1 # Default to Bollywood as requested
 )
-
-# Set the current playlist dictionary
+# Set the current playlist dictionary based on choice
 CURRENT_PLAYLISTS = BOLLYWOOD_PLAYLISTS if genre_choice == "Bollywood" else INT_PLAYLISTS
-
 st.write("Take a selfie or select your current mood — matching playlist starts instantly.")
-
 # Camera input
 img_file = st.camera_input("📸 Take a selfie for automatic mood detection")
-
-mood = None 
-
+mood = None # Initialize mood variable
 if img_file:
     # Display captured image
-    st.image(img_file, width=300)
+    st.image(img_file, use_column_width=True)
     
     # Run the simulated analysis
     detected_mood, confidence, mask_present = analyze_image_for_cv_features(img_file)
-    
     if mask_present:
-        st.warning("⚠️ **Mask Detected!** Emotion detection may be unreliable.")
-        mood = st.selectbox("Confirm your mood:", options=list(CURRENT_PLAYLISTS.keys()), index=0)
+        st.warning(
+            "⚠️ **Mask Detected!** Emotion detection may be unreliable. "
+            "Please remove your mask for accurate analysis or select your mood manually."
+        )
+        # Manual selection still uses the dictionary keys
+        mood = st.selectbox("How are you feeling right now?", options=list(CURRENT_PLAYLISTS.keys()), index=3)
+        st.info("Using manually selected mood.")
     else:
+        # Mood detected successfully
         mood = detected_mood
         st.success(f"✅ Detected mood: **{mood.upper()}**")
+        
+        # Confidence Level Meter
         st.metric(label="Detection Confidence", value=f"{int(confidence*100)}%")
-        st.progress(confidence)
+        st.progress(confidence, text="Confidence Level")
 else:
     st.info("Or select your mood manually below")
-    mood = st.selectbox("How are you feeling right now?", options=list(CURRENT_PLAYLISTS.keys()), index=0)
-
+    # Manual mood selection is the fallback
+    mood = st.selectbox("How are you feeling right now?", options=list(CURRENT_PLAYLISTS.keys()), index=3)
 # Display and play the matching playlist
 if mood:
     st.markdown("---")
-    st.markdown(f"### Now Playing: **{mood.upper()} ({genre_choice})** ▶️")
-    
-    # Get the correct URL
-    spotify_url = CURRENT_PLAYLISTS[mood]
-    
-    # Render the Spotify Player
-    # Height 80 is best for single tracks, 380 is best for playlists
-    components.iframe(spotify_url, height=80)
-
+    st.markdown(f"### Now Playing: **{mood.upper()} {genre_choice} Playlist** ▶️")
+    # Use the selected playlist based on the genre choice
+    st.components.v1.iframe(CURRENT_PLAYLISTS[mood], height=380)
 # Footer
 st.markdown("---")
-st.caption("Built by **Vazir** • B.Tech CSE 2025")
+st.caption("Built by **Vazir** • B.Tech CSE 2025 | Full ML + Live Webcam version available on Google Colab")  
