@@ -93,13 +93,56 @@ st.set_page_config(page_title="EmoPlay", layout="centered")
 def _css():
     return """
     <style>
-    :root{--accent:#7b61ff; --accent-2:#ff758c}
-    .app-header{display:flex;align-items:center;gap:12px}
-    .logo{font-size:32px}
-    .card{background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 18px rgba(0,0,0,0.25)}
-    .emotion-bubble{display:inline-block;padding:12px 18px;border-radius:999px;font-weight:700;color:#fff}
-    .center{display:flex;align-items:center;justify-content:center}
-    .muted{color: #a6a6a6}
+    :root{--accent:#00ff41; --accent-2:#ff006e; --dark-bg:#0a0e27; --card-bg:#1a1f3a}
+    * {font-family: 'Courier New', monospace}
+    body {background:#0a0e27; color:#00ff41}
+    .app-header{display:flex;align-items:center;gap:12px; margin-bottom:24px}
+    .logo{font-size:48px; text-shadow:0 0 20px #ff006e}
+    .app-header h1 {color:#00ff41; text-shadow:0 0 10px #00ff41; margin:0; letter-spacing:3px}
+    .app-header .muted {color:#00a878; text-shadow:0 0 5px #00a878}
+    .card{
+      background:linear-gradient(135deg, #1a1f3a 0%, #16213e 100%);
+      padding:20px;
+      border-radius:2px;
+      border:2px solid #00ff41;
+      box-shadow:0 0 20px rgba(0,255,65,0.3), inset 0 0 20px rgba(255,0,110,0.1);
+      position:relative;
+    }
+    .card::before {content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(90deg, transparent 0%, rgba(0,255,65,0.1) 50%, transparent 100%); pointer-events:none; border-radius:2px}
+    .emotion-bubble{
+      display:inline-block;
+      padding:16px 24px;
+      border-radius:0px;
+      font-weight:900;
+      color:#000;
+      border:3px solid;
+      box-shadow:0 0 30px currentColor;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+    .center{display:flex;align-items:center;justify-content:center; flex-direction:column}
+    .muted{color:#00a878; text-shadow:0 0 5px #00a878}
+    .playlist-link {
+      display:inline-block;
+      padding:14px 24px;
+      background:linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+      color:#000;
+      text-decoration:none;
+      border:2px solid #00ff41;
+      border-radius:0px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      box-shadow:0 0 20px #00ff41, inset 0 0 10px rgba(255,255,255,0.3);
+      transition:all 0.3s;
+      margin:12px 0;
+    }
+    .playlist-link:hover {
+      box-shadow:0 0 40px #00ff41, 0 0 60px #ff006e, inset 0 0 20px rgba(255,255,255,0.5);
+      transform:scale(1.05);
+      background:linear-gradient(135deg, #00ff41 0%, #ff006e 100%);
+    }
+    .history-item {color:#00ff41; margin:6px 0; text-shadow:0 0 5px #00ff41}
     </style>
     """
 
@@ -110,13 +153,13 @@ st.markdown("---")
 st.write("Allow camera → look at webcam → songs change with your emotion!")
 
 playlists = {
-    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC?utm_source=generator",
-    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1?utm_source=generator",
-    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator",
-    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator",
-    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXa2PvUpywmrr?utm_source=generator",
-    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned?utm_source=generator",
-    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator"
+    "happy": "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC",
+    "sad": "https://open.spotify.com/playlist/37i9dQZF1DX7qK8ma5wgG1",
+    "angry": "https://open.spotify.com/playlist/37i9dQZF1DWYNSmSSRFIWg",
+    "neutral": "https://open.spotify.com/playlist/37i9dQZF1DX2sUQwD7tbmL",
+    "surprise": "https://open.spotify.com/playlist/37i9dQZF1DXa2PvUpywmrr",
+    "fear": "https://open.spotify.com/playlist/37i9dQZF1DX4fpCWaHOned",
+    "disgust": "https://open.spotify.com/playlist/37i9dQZF1DWYNSmSSRFIWg"
 }
 
 img_file_buffer = st.camera_input(" ")
@@ -160,12 +203,7 @@ if img_file_buffer is not None:
                 left.warning(f"Emotion detection failed: {e}")
                 emotion = "neutral"
     
-    # Left column: show the captured image (or placeholder) and emotion
-    if img_file_buffer is not None and cv2_img is not None:
-        # show image in left column
-        left.image(img_file_buffer, caption="Captured image", use_column_width=True)
-    else:
-        left.markdown('<div class="card center">No camera input — please allow camera above</div>', unsafe_allow_html=True)
+    # Left column: emotion display only (no captured image)
 
     # Compute confidence from DeepFace result if available
     emotion_confidence = 0.0
@@ -198,47 +236,44 @@ if img_file_buffer is not None:
     if len(hist) > 10:
         hist.pop()
 
-    emoji, color = EMOJI.get(emotion.lower(), ('😐', '#9AA0FF'))
-    left.markdown(f"<div class=\"card center\"><div style=\"text-align:center\"><div class=\"emotion-bubble\" style=\"background:{color}\">{emoji} &nbsp; {emotion.upper()}</div><div class=\"muted\" style=\"margin-top:8px\">Detected mood</div></div>", unsafe_allow_html=True)
+    emoji, color = EMOJI.get(emotion.lower(), ('😐', '#00ff41'))
+    left.markdown(f"<div class=\"card center\"><div style=\"text-align:center\"><div class=\"emotion-bubble\" style=\"background:{color}; border-color:{color}\">{emoji} &nbsp; {emotion.upper()}</div><div class=\"muted\" style=\"margin-top:12px\">⚡ DETECTED MOOD ⚡</div></div></div>", unsafe_allow_html=True)
 
     # Confidence meter
     pct = int(emotion_confidence) if emotion_confidence else 0
     meter_html = f"""
-    <div style='margin-top:12px'>
-      <div style='font-size:12px;color:#9aa0ff;margin-bottom:6px'>Confidence: {pct}%</div>
-      <div style='background:#eee;border-radius:8px;height:12px;width:100%'><div style='width:{pct}%;background:linear-gradient(90deg,var(--accent),var(--accent-2));height:12px;border-radius:8px'></div></div>
+    <div style='margin-top:16px'>
+      <div style='font-size:11px;color:#00a878;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:bold'>⚙ CONFIDENCE: {pct}% ⚙</div>
+      <div style='background:#0a0e27;border-radius:0px;height:8px;width:100%;border:1px solid #00ff41;box-shadow:inset 0 0 10px rgba(0,255,65,0.3)'><div style='width:{pct}%;background:linear-gradient(90deg,#00ff41,#ff006e);height:8px;border-radius:0px;box-shadow:0 0 15px #00ff41'></div></div>
     </div>
     """
     left.markdown(meter_html, unsafe_allow_html=True)
 
-    # Right column: playlist embed and description
-    right.markdown('<div class="card"><h3 style="margin:0">Now Playing</h3><div class="muted">Perfect songs for your mood ↓</div></div>', unsafe_allow_html=True)
-    right.components.v1.iframe(playlists.get(emotion, playlists["neutral"]), height=320)
-
-    # Open in Spotify link (non-embed)
+    # Right column: Spotify link
+    right.markdown('<div class="card"><h3 style="margin:0;color:#00ff41;text-shadow:0 0 10px #00ff41">▶ NOW PLAYING ◀</h3><div class="muted" style="margin-top:6px">↓ Perfect songs for your mood ↓</div></div>', unsafe_allow_html=True)
+    
+    # Open in Spotify link (working direct link)
     src = playlists.get(emotion, playlists["neutral"]) or playlists["neutral"]
-    open_url = src.replace('/embed', '')
-    right.markdown(f"[Open in Spotify]({open_url})")
-    right.markdown('<div class="muted" style="margin-top:8px">Tip: If the playlist doesn\'t start, open it in Spotify using the link above.</div>', unsafe_allow_html=True)
+    right.markdown(f'<a href="{src}" target="_blank" class="playlist-link">🎵 Open Playlist in Spotify 🎵</a>', unsafe_allow_html=True)
+    right.markdown('<div class="muted" style="margin-top:12px;font-size:12px">⚡ CLICK TO LAUNCH PLAYLIST ⚡</div>', unsafe_allow_html=True)
 
     # Mood history and simple counts
-    right.markdown('<div style="margin-top:12px" class="card"><h4 style="margin:0">Recent moods</h4></div>', unsafe_allow_html=True)
+    right.markdown('<div style="margin-top:16px" class="card"><h4 style="margin:0;color:#ff006e;text-shadow:0 0 10px #ff006e">📊 RECENT MOODS 📊</h4></div>', unsafe_allow_html=True)
     # show recent entries
     rows = []
     for entry in hist[:6]:
         e = entry['emotion']
         c = entry.get('confidence', 0)
-        emo_ico = EMOJI.get(e, ('😐', '#9AA0FF'))[0]
-        rows.append(f"{emo_ico}  {e.upper()} — {c}%")
-    right.markdown('<br>'.join(rows))
+        emo_ico = EMOJI.get(e, ('😐', '#00ff41'))[0]
+        rows.append(f'<div class="history-item">{emo_ico}  {e.upper()} — {c}%</div>')
+    right.markdown(''.join(rows), unsafe_allow_html=True)
 
     # counts
     counts = {}
     for entry in hist:
         counts[entry['emotion']] = counts.get(entry['emotion'], 0) + 1
     if counts:
-        right.markdown('<div style="margin-top:8px" class="muted">Mood counts (recent):</div>')
-        right.markdown('  '.join([f"**{k}**: {v}" for k, v in counts.items()]))
+        right.markdown('<div style="margin-top:12px; padding:12px; border:1px solid #00a878; border-radius:0px; background:rgba(0,168,120,0.1)"><div style="color:#00a878;font-weight:bold;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">📈 MOOD COUNT 📈</div>' + ''.join([f'<div style="color:#00ff41;margin:4px 0"><strong>{k}</strong>: {v}x</div>' for k, v in counts.items()]) + '</div>', unsafe_allow_html=True)
 
     # Dependency checker (non-invasive)
     import importlib.util
@@ -250,5 +285,5 @@ if img_file_buffer is not None:
         right.markdown(f"To install: `pip install {' '.join(missing)}`")
 else:
     left, right = cols[0], cols[1]
-    left.markdown('<div class="card center">Waiting for camera… click the camera above</div>', unsafe_allow_html=True)
-    right.markdown('<div class="card center"><div class="muted">No playlist yet — allow camera to begin</div></div>', unsafe_allow_html=True)
+    left.markdown('<div class="card center"><h3 style="color:#ff006e;text-shadow:0 0 15px #ff006e;text-transform:uppercase;letter-spacing:3px">🎬 AWAITING INPUT 🎬</h3><div class="muted" style="margin-top:12px">Click the camera icon to begin emotion detection</div></div>', unsafe_allow_html=True)
+    right.markdown('<div class="card center"><h3 style="color:#ff006e;text-shadow:0 0 15px #ff006e;text-transform:uppercase;letter-spacing:3px">🎵 STANDBY 🎵</h3><div class="muted" style="margin-top:12px">Playlist will appear once your mood is detected</div></div>', unsafe_allow_html=True)
