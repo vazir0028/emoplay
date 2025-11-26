@@ -1,49 +1,46 @@
 import streamlit as st
 import cv2
-import numpy as np
 from deepface import DeepFace
-from PIL import Image
+import numpy as np
 
-# 1. Set Page Configuration
-st.set_page_config(page_title="Emotion Music Recommender", page_icon="🎵")
+st.set_page_config(page_title="EmoPlay", layout="centered")
+st.title("EmoPlay – Music That Matches Your Mood")
+st.write("Allow camera → look at webcam → songs change with your emotion!")
 
-st.title("🎵 Emotion Based Music Recommendation")
-st.write("This app uses DeepFace to detect your emotion and recommend music.")
+playlists = {
+    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC?utm_source=generator",
+    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1?utm_source=generator",
+    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator",
+    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DX2sUQwD7tbmL?utm_source=generator",
+    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXa2PvUpywmrr?utm_source=generator",
+    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DX4fpCWaHOned?utm_source=generator",
+    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg?utm_source=generator"
+}
 
-# 2. Camera Input
-# Streamlit has a built-in camera input widget that is easier to use in Cloud than cv2.VideoCapture
-img_file_buffer = st.camera_input("Take a picture")
+img_file_buffer = st.camera_input(" ")
 
 if img_file_buffer is not None:
-    # Convert the file to an opencv image.
     bytes_data = img_file_buffer.getvalue()
     cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-
-    # Display processing message
-    with st.spinner('Analyzing emotion... (This might take a moment)'):
+    if cv2_img is None:
+        st.error("Could not decode the image from the camera.")
+        emotion = "neutral"
+    else:
         try:
-            # 3. Analyze Emotion
-            # enforce_detection=False prevents crash if face isn't perfect
             result = DeepFace.analyze(cv2_img, actions=['emotion'], enforce_detection=False)
-            
-            # DeepFace returns a list of dictionaries in newer versions
-            if isinstance(result, list):
-                result = result[0]
-            
-            dominant_emotion = result['dominant_emotion']
-            
-            st.success(f"Detected Emotion: **{dominant_emotion.upper()}**")
-            
-            # 4. Logic for Spotify (Placeholder)
-            st.subheader(f"Recommended Playlist for {dominant_emotion}:")
-            if dominant_emotion == 'happy':
-                st.write("🎶 Playing 'Happy Hits'...")
-                # Add your Spotify logic here
-            elif dominant_emotion == 'sad':
-                st.write("🎶 Playing 'Melancholy Mix'...")
+            # DeepFace.analyze may return a dict (single face) or a list (multiple faces)
+            if isinstance(result, list) and len(result) > 0:
+                emotion = result[0].get('dominant_emotion') or result[0].get('emotion', {}).get('dominant_emotion', 'neutral')
+            elif isinstance(result, dict):
+                emotion = result.get('dominant_emotion') or result.get('emotion', {}).get('dominant_emotion', 'neutral')
             else:
-                st.write(f"🎶 Playing {dominant_emotion} vibes...")
-
+                emotion = 'neutral'
         except Exception as e:
-            st.error(f"Error analyzing face: {e}")
-            st.info("Please make sure your face is clearly visible.")
+            st.warning(f"Emotion detection failed: {e}")
+            emotion = "neutral"
+    
+    st.write(f"### Detected Mood → **{emotion.upper()}**")
+    st.write("#### Now Playing Perfect Songs For Your Mood ↓")
+    st.components.v1.iframe(playlists.get(emotion, playlists["neutral"]), height=380)
+else:
+    st.write("Waiting for camera… click the camera above")
