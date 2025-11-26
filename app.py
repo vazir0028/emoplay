@@ -3,7 +3,7 @@ import streamlit as st
 import random
 import streamlit.components.v1 as components
 
-# --- CONFIGURATION ---
+#  CONFIGURATION 
 st.set_page_config(
     page_title="EmoBeats - Music for Your Mood",
     page_icon="🎵",
@@ -11,9 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- PLAYLIST CONFIGURATION ---
-# NOTE: These are real Spotify Embed links. 
-# To get these, go to Spotify > Share > Embed Playlist > Copy the 'src' URL.
+# PLAYLIST CONFIGURATION 
 
 INT_PLAYLISTS = {
     "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
@@ -35,7 +33,7 @@ BOLLYWOOD_PLAYLISTS = {
     "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy
 }
 
-# --- SIMULATED COMPUTER VISION ANALYSIS ---
+#  SIMULATED COMPUTER VISION ANALYSIS 
 def analyze_image_for_cv_features(image_file):
     """Simulate emotion detection and confidence."""
     # In a real app, you would pass 'image_file' to a model like DeepFace or Fer2013
@@ -44,7 +42,7 @@ def analyze_image_for_cv_features(image_file):
     confidence = round(random.uniform(0.60, 0.99), 2)
     return mood, confidence, mask_present
 
-# --- APP LAYOUT ---
+#  APP LAYOUT 
 st.title("EmoBeats 🎶")
 st.markdown("### Let your face choose the music")
 
@@ -66,7 +64,7 @@ img_file = st.camera_input("📸 Take a selfie for automatic mood detection")
 
 mood = None # Initialize mood variable
 
-# --- LOGIC FLOW ---
+#  LOGIC FLOW 
 if img_file:
     # 1. Run Simulation
     detected_mood, confidence, mask_present = analyze_image_for_cv_features(img_file)
