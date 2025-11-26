@@ -24,7 +24,7 @@ if img_file_buffer is not None:
     cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
     if cv2_img is None:
         st.error("Could not decode the image from the camera.")
-        emotion = "neutral"
+        emotion = "neutral" 
     else:
         try:
             result = DeepFace.analyze(cv2_img, actions=['emotion'], enforce_detection=False)
