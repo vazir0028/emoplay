@@ -1,3 +1,7 @@
 streamlit
-deepface[light]
+deepface
+opencv-python-headless
 tf-keras
+pandas
+numpy
+spotipy
