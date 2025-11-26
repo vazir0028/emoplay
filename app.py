@@ -1,5 +1,4 @@
-# app.py - EmoPlay: Emotion-Based Music Player
-# Author: Vazir | B.Tech CSE 2025
+
 import streamlit as st
 import random
 import streamlit.components.v1 as components
@@ -108,5 +107,5 @@ if mood:
 
 # Footer
 st.markdown("---")
-st.caption("Built by **Vazir** • B.Tech CSE 2025 | Emotion AI Prototype")
+st.caption("Built by Prem 2025 | Emotion AI Prototype")
 
