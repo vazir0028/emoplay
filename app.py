@@ -1,8 +1,6 @@
 # app.py - EmoPlay: Emotion-Based Music Player
 # Author: Vazir | B.Tech CSE 2025
-from deepface import DeepFace
-import cv2
-import numpy as np
+
 import streamlit as st
 import random
 
