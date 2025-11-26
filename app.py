@@ -186,11 +186,10 @@ if img_file_buffer is not None:
             try:
                 # DeepFace analysis (CRITICAL FIX: Use 'opencv' detector backend)
                 result = DeepFace.analyze(
-                    cv2_img, 
-                    actions=['emotion'], 
-                    enforce_detection=False,
-                    # This ensures the Keras/RetinaFace dependency conflict is avoided.
-                    detector_backend='opencv' 
+                cv2_img, 
+                actions=['emotion'], 
+                enforce_detection=False,
+                detector_backend='opencv' 
                 )
                 
                 # Robust result extraction
