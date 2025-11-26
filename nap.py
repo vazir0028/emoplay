@@ -1,126 +1,117 @@
-
+import streamlit as st
+import cv2
 import numpy as np
 from deepface import DeepFace
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from IPython.display import display, Javascript, Image
-from google.colab.output import eval_js
-from base64 import b64decode
-import io
-from PIL import Image as PILImage
+from PIL import Image
+import os
 
-# ---------------------------------------------------------
-# 1. SETUP SPOTIFY
-# ---------------------------------------------------------
-# Replace these with your actual keys from Spotify Developer Dashboard
-print("--- Spotify Setup ---")
-CLIENT_ID = input("Enter your Spotify Client ID: ")
-CLIENT_SECRET = input("Enter your Spotify Client Secret: ")
+# --- PAGE CONFIGURATION ---
+st.set_page_config(page_title="Emotion Music Player", page_icon="🎵", layout="wide")
 
-try:
-    auth_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-    sp = spotipy.Spotify(auth_manager=auth_manager)
-    print("✅ Spotify Connected Successfully!\n")
-except Exception as e:
-    print(f"❌ Spotify Connection Failed: {e}")
+# --- HIDE TENSORFLOW WARNINGS ---
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-# ---------------------------------------------------------
-# 2. DEFINE WEBCAM HELPER (JavaScript for Colab)
-# ---------------------------------------------------------
-def take_photo(filename='photo.jpg', quality=0.8):
-  """
-  Accesses the local webcam via JavaScript, captures an image,
-  and saves it to the Colab filesystem.
-  """
-  js = Javascript('''
-    async function takePhoto(quality) {
-      const div = document.createElement('div');
-      const capture = document.createElement('button');
-      capture.textContent = 'Capture Emotion';
-      div.appendChild(capture);
+# --- TITLE & SIDEBAR ---
+st.title("🎵 Emotion-Based Music Recommender")
+st.write("Take a selfie, and I'll play music that matches your mood!")
 
-      const video = document.createElement('video');
-      video.style.display = 'block';
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
+st.sidebar.header("🔑 Setup Keys")
+st.sidebar.info("Get these from the Spotify Developer Dashboard.")
+client_id = st.sidebar.text_input("Spotify Client ID", type="password")
+client_secret = st.sidebar.text_input("Spotify Client Secret", type="password")
 
-      document.body.appendChild(div);
-      div.appendChild(video);
-      video.srcObject = stream;
-      await video.play();
+# --- FUNCTIONS ---
 
-      // Resize the output to fit the video element.
-      google.colab.output.setIframeHeight(document.documentElement.scrollHeight, true);
-
-      // Wait for Capture to be clicked.
-      await new Promise((resolve) => capture.onclick = resolve);
-
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      stream.getVideoTracks()[0].stop();
-      div.remove();
-      return canvas.toDataURL('image/jpeg', quality);
-    }
-    ''')
-  display(js)
-  data = eval_js('takePhoto({})'.format(quality))
-  binary = b64decode(data.split(',')[1])
-
-  # Save binary data to file
-  with open(filename, 'wb') as f:
-    f.write(binary)
-  return filename
-
-# ---------------------------------------------------------
-# 3. MAIN APPLICATION LOOP
-# ---------------------------------------------------------
-def recommend_music_based_on_emotion():
-    print("📸 Please click 'Capture Emotion' below...")
-
+@st.cache_resource
+def get_spotify_client(c_id, c_secret):
     try:
-        # 1. Capture Image
-        filename = take_photo()
-        print("✅ Image captured!")
-
-        # 2. Analyze Emotion
-        print("🔍 Analyzing face...")
-        obj = DeepFace.analyze(img_path = filename, actions = ['emotion'], enforce_detection=False)
-
-        # DeepFace returns a list of dictionaries
-        dominant_emotion = obj[0]['dominant_emotion']
-        print(f"\n🧠 Detected Emotion: {dominant_emotion.upper()}")
-
-        # 3. Search Spotify
-        # We map emotions to search queries
-        search_query = f"{dominant_emotion} hits"
-
-        if dominant_emotion == "sad":
-            search_query = "uplifting pop" # Maybe cheer them up?
-        elif dominant_emotion == "angry":
-            search_query = "calm relaxing"
-        elif dominant_emotion == "neutral":
-            search_query = "lofi study"
-
-        print(f"🎵 Searching Spotify for: '{search_query}'...")
-
-        results = sp.search(q=search_query, type='playlist', limit=3)
-
-        # 4. Display Results
-        print("\n🎧 Recommended Playlists:")
-        playlists = results['playlists']['items']
-
-        if not playlists:
-            print("No playlists found.")
-        else:
-            for idx, playlist in enumerate(playlists):
-                print(f"{idx+1}. {playlist['name']} - {playlist['external_urls']['spotify']}")
-
-        # Display the captured image
-        display(PILImage.open(filename))
-
+        auth_manager = SpotifyClientCredentials(client_id=c_id, client_secret=c_secret)
+        sp = spotipy.Spotify(auth_manager=auth_manager)
+        return sp
     except Exception as e:
-        print(f"❌ Error: {e}")
+        return None
 
-# Run the app
-recommend_music_based_on_emotion()
+def get_mood_playlist_query(emotion):
+    # Mapping emotions to search terms
+    mood_mapping = {
+        "angry": "calm classical piano",
+        "disgust": "heavy metal",
+        "fear": "comforting acoustic",
+        "happy": "top hits upbeat",
+        "sad": "uplifting pop",
+        "surprise": "electronic dance",
+        "neutral": "lofi study beats"
+    }
+    return mood_mapping.get(emotion, "pop music")
+
+# --- MAIN APP LOGIC ---
+
+# 1. Check if keys are entered
+if not client_id or not client_secret:
+    st.warning("⚠️ Please enter your Spotify API Keys in the sidebar to start.")
+else:
+    sp = get_spotify_client(client_id, client_secret)
+
+    # 2. Camera Input
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.subheader("📸 Your Photo")
+        img_file_buffer = st.camera_input("Take a picture")
+
+    if img_file_buffer is not None:
+        # Convert the buffer to an image that DeepFace can read
+        bytes_data = img_file_buffer.getvalue()
+        cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+
+        # 3. Analyze Emotion
+        with col2:
+            st.subheader("🧠 Analysis Results")
+            with st.spinner("Analyzing your face..."):
+                try:
+                    # DeepFace analysis
+                    result = DeepFace.analyze(cv2_img, actions=['emotion'], enforce_detection=False)
+                    
+                    # Handle list vs dict return type
+                    if isinstance(result, list):
+                        result = result[0]
+                    
+                    dominant_emotion = result['dominant_emotion']
+                    
+                    st.success(f"Detected Mood: **{dominant_emotion.upper()}**")
+                    
+                    # 4. Search Spotify
+                    search_query = get_mood_playlist_query(dominant_emotion)
+                    st.write(f"🎶 Searching for: *{search_query}*")
+                    
+                    search_results = sp.search(q=search_query, type='playlist', limit=1)
+                    
+                    if search_results['playlists']['items']:
+                        playlist = search_results['playlists']['items'][0]
+                        playlist_name = playlist['name']
+                        playlist_id = playlist['id']
+                        
+                        st.markdown(f"### 🎧 Playing: {playlist_name}")
+                        
+                        # 5. Embed Player
+                        # We use HTML iframe to embed the Spotify player
+                        spotify_embed_url = f"https://open.spotify.com/embed/playlist/{playlist_id}"
+                        components_html = f"""
+                        <iframe style="border-radius:12px" src="{spotify_embed_url}" 
+                        width="100%" height="352" frameBorder="0" 
+                        allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy"></iframe>
+                        """
+                        st.components.v1.html(components_html, height=360)
+                        
+                    else:
+                        st.error("No playlists found for this mood.")
+
+                except Exception as e:
+                    st.error(f"Error processing image: {e}")
+
+# --- FOOTER ---
+st.markdown("---")
+st.markdown("B.Tech Project | Built with Streamlit & DeepFace")
