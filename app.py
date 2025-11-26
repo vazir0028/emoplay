@@ -7,7 +7,7 @@ import numpy as np
 
 # Set up the Streamlit page configuration
 st.set_page_config(
-    page_title="EmoPlay", 
+    page_title="EmoPlay", 
     page_icon="🎶", 
     layout="wide", # Use wide layout for better visual space
     initial_sidebar_state="collapsed"
