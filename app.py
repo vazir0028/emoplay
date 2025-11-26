@@ -24,7 +24,7 @@ EMOTION_DATA = {
     "disgust": {"color": "#009688", "icon": "🤢"},
 }
 
-# Placeholder Spotify Embed Links (Replace with real embed links!)
+# Placeholder Spotify Embed Links (You MUST replace these with real embed links!)
 playlists = {
     "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
     "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8qF87n68?utm_source=generator",
@@ -185,11 +185,11 @@ if img_file_buffer is not None:
         else:
             try:
                 # DeepFace analysis (CRITICAL FIX: Use 'opencv' detector backend)
-                # This bypasses the Keras/RetinaFace version conflict that caused your errors.
                 result = DeepFace.analyze(
                     cv2_img, 
                     actions=['emotion'], 
                     enforce_detection=False,
+                    # This ensures the Keras/RetinaFace dependency conflict is avoided.
                     detector_backend='opencv' 
                 )
                 
