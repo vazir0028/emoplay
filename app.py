@@ -73,8 +73,8 @@ if img_file:
     
     # 2. Check for Mask
     if mask_present:
-        st.warning("⚠️ **Mask Detected!** Analysis unreliable.")
-        st.info("Please select your mood manually below.")
+        st.warning("⚠️ **Mask Detected!** System Not Detecting.")
+        st.info("You Can select your mood manually below.")
         # Fallback to manual
         mood = st.selectbox("How are you feeling?", options=list(CURRENT_PLAYLISTS.keys()))
     else:
