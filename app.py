@@ -17,23 +17,37 @@ st.set_page_config(
 # To get these, go to Spotify > Share > Embed Playlist > Copy the 'src' URL.
 
 INT_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
-    "sad":      "https://open.spotify.com/playlist/3CJyvPkmhFZK3bunJfrzUl", # Sad Songs
-    "angry":    "https://open.spotify.com/playlist/1HcLNscW9GFlGkffYjSCRr", # Rock/Intense
-    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6", # Chill Vibes
-    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Energetic
-    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Spooky
-    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy Metal
+    # Happy Hits (Upbeat pop/dance)
+    "happy":     "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC", 
+    # Sad Songs (Emotional ballads)
+    "sad":       "https://open.spotify.com/playlist/37i9dQZF1DX7qK8ma5wgG1", 
+    # Rock Hard (Intense Rock/Angry)
+    "angry":     "https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U", 
+    # Chill Hits (Relaxed/Neutral)
+    "neutral":   "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6", 
+    # Party Hits (High energy/Surprise)
+    "surprise":  "https://open.spotify.com/playlist/37i9dQZF1DXaXB8fQg7xif", 
+    # Halloween/Spooky (Fear/Thriller scores)
+    "fear":      "https://open.spotify.com/playlist/37i9dQZF1DX9CA7RM5s5iU", 
+    # Kickass Metal (Disgust/Heavy Metal)
+    "disgust":   "https://open.spotify.com/playlist/37i9dQZF1DWTcqUzwhNmKv"  
 }
 
 BOLLYWOOD_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Bollywood Dance
-    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DXca8AM0c05a1", # Bollywood Sad
-    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX7sI57iHQdM6", # Workout/Power
-    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DXd8cOUiya1cg", # Bollywood Acoustic
-    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Party
-    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Horror themes
-    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy
+    # Bollywood Dance Music (Happy/Upbeat)
+    "happy":     "https://open.spotify.com/playlist/37i9dQZF1DX5q67ZpWyRrZ", 
+    # Bollywood Sad Songs (Emotional)
+    "sad":       "https://open.spotify.com/playlist/37i9dQZF1DX4dyrS73D35R", 
+    # Gym Bollywood (High Power/Angry)
+    "angry":     "https://open.spotify.com/playlist/37i9dQZF1DXdxcBWuJkbcy", 
+    # Bollywood Acoustic (Calm/Neutral)
+    "neutral":   "https://open.spotify.com/playlist/37i9dQZF1DX6GjY5TqYjXN", 
+    # Punjabi 101 (High Energy/Party)
+    "surprise":  "https://open.spotify.com/playlist/37i9dQZF1DX5cZuAHLNjGz", 
+    # Suspense/Thriller BGM (Fear)
+    "fear":      "https://open.spotify.com/playlist/37i9dQZF1DX1RxZbd13t8s", 
+    # Desi Hip Hop/Hard Hitting (Aggressive/Heavy)
+    "disgust":   "https://open.spotify.com/playlist/37i9dQZF1DWSYIVP8d447O"  
 }
 
 # --- SIMULATED COMPUTER VISION ANALYSIS ---
