@@ -1,4 +1,6 @@
 streamlit
-opencv-python
+# Use a specific, stable DeepFace version
+deepface==2.4.4
+# Explicitly list OpenCV and NumPy
+opencv-python-headless
 numpy
-deepface
