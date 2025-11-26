@@ -120,7 +120,7 @@ if img_file_buffer is not None:
     # Initialize defaults
     emotion = "neutral" 
     sorted_scores = []
-    emotion_scores = {}
+    emotion_scores = {'neutral': 100} # Defaulting to 100% neutral initially
 
     # --- 3A. ANALYSIS ---
     analysis_container = st.container()
@@ -189,8 +189,7 @@ if img_file_buffer is not None:
             
             # Bar with percentage text overlay (using standard Streamlit progress)
             with col_bar:
-                # *** CRITICAL FIX: Explicitly convert to float to prevent StreamlitAPIException ***
-                st.progress(float(score) / 100, text=score_percent)
+                st.progress(score / 100, text=score_percent)
                 
 
     with col_player:
