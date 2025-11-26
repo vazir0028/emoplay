@@ -1,6 +1,3 @@
-# EmoPlay – Real-Time Emotion Detection → Spotify Player
-# Author: Vazir | B.Tech CSE 2025
-# 100% working on Streamlit Cloud – NO cv2, NO errors
 
 import streamlit as st
 from deepface import DeepFace
