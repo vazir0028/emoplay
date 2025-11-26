@@ -1,3 +1,4 @@
 streamlit
-deepface
+# Pin DeepFace to a stable version
+deepface==2.4.4 
 opencv-python-headless
