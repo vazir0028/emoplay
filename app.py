@@ -39,4 +39,4 @@ st.markdown("### Now Playing")
 st.components.v1.iframe(PLAYLISTS[mood], height=380)
 # Footer
 st.markdown("---")
-st.caption("Built by Vazir • B.Tech CSE 2025 | Full ML + Live Webcam version available on Google Colab") check this code and tell me the
+st.caption("Built by Vazir • B.Tech CSE 2025 | Full ML + Live Webcam version available on Google Colab") 
