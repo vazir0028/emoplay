@@ -13,32 +13,27 @@ st.set_page_config(
 )
 
 # --- PLAYLIST CONFIGURATION ---
-# NOTE: These are real Spotify Embed links. 
+# NOTE: These are real Spotify Embed links. 
 # To get these, go to Spotify > Share > Embed Playlist > Copy the 'src' URL.
 
 INT_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
-    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1", # Sad Songs
-    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1EIeCX1SSo6M9y", # Rock/Intense
-    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6", # Chill Vibes
+    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
+    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1", # Sad Songs
+    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1EIeCX1SSo6M9y", # Rock/Intense
+    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6", # Chill Vibes
     "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Energetic
-    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Spooky
-    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy Metal
+    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Spooky
+    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy Metal
 }
 
 BOLLYWOOD_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Bollywood Dance
-    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DXca8AM0c05a1", # Bollywood Sad
-    
-    # UPDATED: Desi Hip Hop for "Angry" (Aggressive, Fast, Gully Boy vibes)
-    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX3I9OebWFCso", 
-    
-    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DXd8cOUiya1cg", # Bollywood Acoustic
+    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Bollywood Dance
+    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DXca8AM0c05a1", # Bollywood Sad
+    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1DX7sI57iHQdM6", # Workout/Power
+    "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DXd8cOUiya1cg", # Bollywood Acoustic
     "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Party
-    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Horror themes
-    
-    # UPDATED: Rock in India/Indie for "Disgust" (Edgy, Heavy, Gritty)
-    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX5cO1uP1jIK6"  
+    "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Horror themes
+    "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX186v583rmzp"  # Heavy
 }
 
 # --- SIMULATED COMPUTER VISION ANALYSIS ---
@@ -59,7 +54,7 @@ genre_choice = st.radio(
     "Choose Your Vibe:",
     options=["International Hits", "Bollywood"],
     horizontal=True,
-    index=1 
+    index=1 
 )
 
 # Set the current playlist dictionary
@@ -76,7 +71,7 @@ mood = None # Initialize mood variable
 if img_file:
     # 1. Run Simulation
     detected_mood, confidence, mask_present = analyze_image_for_cv_features(img_file)
-    
+    
     # 2. Check for Mask
     if mask_present:
         st.warning("⚠️ **Mask Detected!** Analysis unreliable.")
@@ -87,14 +82,14 @@ if img_file:
         # 3. Success Case
         mood = detected_mood
         st.success(f"✅ Detected mood: **{mood.upper()}**")
-        
+        
         # Metrics
         col1, col2 = st.columns(2)
         with col1:
             st.metric(label="Confidence", value=f"{int(confidence*100)}%")
         with col2:
             st.metric(label="Genre", value=genre_choice)
-            
+            
         st.progress(confidence, text="AI Confidence Level")
 
 else:
@@ -106,7 +101,7 @@ else:
 if mood:
     st.markdown("---")
     st.subheader(f"Now Playing: **{mood.title()} ({genre_choice})**")
-    
+    
     # Embed Spotify Player
     playlist_url = CURRENT_PLAYLISTS[mood]
     components.iframe(playlist_url, height=400)
@@ -114,3 +109,4 @@ if mood:
 # Footer
 st.markdown("---")
 st.caption("Built by **Vazir** • B.Tech CSE 2025 | Emotion AI Prototype")
+this code works very good only the mood angry and disguest play calm song
