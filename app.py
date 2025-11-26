@@ -93,56 +93,49 @@ st.set_page_config(page_title="EmoPlay", layout="centered")
 def _css():
     return """
     <style>
-    :root{--accent:#00ff41; --accent-2:#ff006e; --dark-bg:#0a0e27; --card-bg:#1a1f3a}
-    * {font-family: 'Courier New', monospace}
-    body {background:#0a0e27; color:#00ff41}
-    .app-header{display:flex;align-items:center;gap:12px; margin-bottom:24px}
-    .logo{font-size:48px; text-shadow:0 0 20px #ff006e}
-    .app-header h1 {color:#00ff41; text-shadow:0 0 10px #00ff41; margin:0; letter-spacing:3px}
-    .app-header .muted {color:#00a878; text-shadow:0 0 5px #00a878}
+    * {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif}
+    body {background:#f8f9fa; color:#2c3e50}
+    .app-header{display:flex;align-items:center;gap:16px; margin-bottom:32px}
+    .logo{font-size:48px}
+    .app-header h1 {color:#1a73e8; margin:0; font-size:32px; font-weight:700}
+    .app-header .muted {color:#666; font-size:14px; margin-top:4px}
     .card{
-      background:linear-gradient(135deg, #1a1f3a 0%, #16213e 100%);
-      padding:20px;
-      border-radius:2px;
-      border:2px solid #00ff41;
-      box-shadow:0 0 20px rgba(0,255,65,0.3), inset 0 0 20px rgba(255,0,110,0.1);
-      position:relative;
+      background:#fff;
+      padding:24px;
+      border-radius:8px;
+      border:1px solid #e0e0e0;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
     }
-    .card::before {content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(90deg, transparent 0%, rgba(0,255,65,0.1) 50%, transparent 100%); pointer-events:none; border-radius:2px}
     .emotion-bubble{
       display:inline-block;
-      padding:16px 24px;
-      border-radius:0px;
-      font-weight:900;
-      color:#000;
-      border:3px solid;
-      box-shadow:0 0 30px currentColor;
-      text-transform:uppercase;
-      letter-spacing:2px;
+      padding:12px 24px;
+      border-radius:20px;
+      font-weight:600;
+      color:#fff;
+      font-size:24px;
     }
     .center{display:flex;align-items:center;justify-content:center; flex-direction:column}
-    .muted{color:#00a878; text-shadow:0 0 5px #00a878}
+    .muted{color:#666; font-size:13px}
     .playlist-link {
       display:inline-block;
-      padding:14px 24px;
-      background:linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
-      color:#000;
+      padding:12px 28px;
+      background:#1a73e8;
+      color:#fff;
       text-decoration:none;
-      border:2px solid #00ff41;
-      border-radius:0px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      box-shadow:0 0 20px #00ff41, inset 0 0 10px rgba(255,255,255,0.3);
-      transition:all 0.3s;
-      margin:12px 0;
+      border:none;
+      border-radius:6px;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      transition:all 0.2s;
+      margin:16px 0;
     }
     .playlist-link:hover {
-      box-shadow:0 0 40px #00ff41, 0 0 60px #ff006e, inset 0 0 20px rgba(255,255,255,0.5);
-      transform:scale(1.05);
-      background:linear-gradient(135deg, #00ff41 0%, #ff006e 100%);
+      background:#1557b0;
+      transform:translateY(-2px);
+      box-shadow:0 4px 12px rgba(26, 115, 232, 0.3);
     }
-    .history-item {color:#00ff41; margin:6px 0; text-shadow:0 0 5px #00ff41}
+    .history-item {color:#2c3e50; margin:8px 0; font-size:13px}
     </style>
     """
 
@@ -236,36 +229,35 @@ if img_file_buffer is not None:
     if len(hist) > 10:
         hist.pop()
 
-    emoji, color = EMOJI.get(emotion.lower(), ('😐', '#00ff41'))
-    left.markdown(f"<div class=\"card center\"><div style=\"text-align:center\"><div class=\"emotion-bubble\" style=\"background:{color}; border-color:{color}\">{emoji} &nbsp; {emotion.upper()}</div><div class=\"muted\" style=\"margin-top:12px\">⚡ DETECTED MOOD ⚡</div></div></div>", unsafe_allow_html=True)
+    emoji, color = EMOJI.get(emotion.lower(), ('😐', '#9AA0FF'))
+    left.markdown(f"<div class=\"card center\"><div style=\"text-align:center\"><div class=\"emotion-bubble\" style=\"background:{color}\">{emoji} &nbsp; {emotion.upper()}</div><div class=\"muted\" style=\"margin-top:12px\">Detected mood</div></div></div>", unsafe_allow_html=True)
 
     # Confidence meter
     pct = int(emotion_confidence) if emotion_confidence else 0
     meter_html = f"""
     <div style='margin-top:16px'>
-      <div style='font-size:11px;color:#00a878;margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:bold'>⚙ CONFIDENCE: {pct}% ⚙</div>
-      <div style='background:#0a0e27;border-radius:0px;height:8px;width:100%;border:1px solid #00ff41;box-shadow:inset 0 0 10px rgba(0,255,65,0.3)'><div style='width:{pct}%;background:linear-gradient(90deg,#00ff41,#ff006e);height:8px;border-radius:0px;box-shadow:0 0 15px #00ff41'></div></div>
+      <div style='font-size:12px;color:#666;margin-bottom:8px;font-weight:600'>Confidence: {pct}%</div>
+      <div style='background:#e0e0e0;border-radius:4px;height:8px;width:100%'><div style='width:{pct}%;background:linear-gradient(90deg,#1a73e8,#ea4335);height:8px;border-radius:4px;transition:width 0.3s'></div></div>
     </div>
     """
     left.markdown(meter_html, unsafe_allow_html=True)
 
     # Right column: Spotify link
-    right.markdown('<div class="card"><h3 style="margin:0;color:#00ff41;text-shadow:0 0 10px #00ff41">▶ NOW PLAYING ◀</h3><div class="muted" style="margin-top:6px">↓ Perfect songs for your mood ↓</div></div>', unsafe_allow_html=True)
+    right.markdown('<div class="card"><h3 style="margin:0;color:#1a73e8">▶ NOW PLAYING ◀</h3><div class="muted" style="margin-top:6px">Perfect songs for your mood</div></div>', unsafe_allow_html=True)
     
-    # Open in Spotify link (working direct link)
+    # Open in Spotify link
     src = playlists.get(emotion, playlists["neutral"]) or playlists["neutral"]
-    right.markdown(f'<a href="{src}" target="_blank" class="playlist-link">🎵 Open Playlist in Spotify 🎵</a>', unsafe_allow_html=True)
-    right.markdown('<div class="muted" style="margin-top:12px;font-size:12px">⚡ CLICK TO LAUNCH PLAYLIST ⚡</div>', unsafe_allow_html=True)
+    right.markdown(f'<a href="{src}" target="_blank" class="playlist-link">🎵 Open in Spotify</a>', unsafe_allow_html=True)
 
     # Mood history and simple counts
-    right.markdown('<div style="margin-top:16px" class="card"><h4 style="margin:0;color:#ff006e;text-shadow:0 0 10px #ff006e">📊 RECENT MOODS 📊</h4></div>', unsafe_allow_html=True)
+    right.markdown('<div style="margin-top:16px" class="card"><h4 style="margin:0;color:#1a73e8">📊 Recent Moods</h4></div>', unsafe_allow_html=True)
     # show recent entries
     rows = []
     for entry in hist[:6]:
         e = entry['emotion']
         c = entry.get('confidence', 0)
-        emo_ico = EMOJI.get(e, ('😐', '#00ff41'))[0]
-        rows.append(f'<div class="history-item">{emo_ico}  {e.upper()} — {c}%</div>')
+        emo_ico = EMOJI.get(e, ('😐', '#9AA0FF'))[0]
+        rows.append(f'<div class="history-item">{emo_ico} {e.upper()} — {c}%</div>')
     right.markdown(''.join(rows), unsafe_allow_html=True)
 
     # counts
@@ -273,7 +265,8 @@ if img_file_buffer is not None:
     for entry in hist:
         counts[entry['emotion']] = counts.get(entry['emotion'], 0) + 1
     if counts:
-        right.markdown('<div style="margin-top:12px; padding:12px; border:1px solid #00a878; border-radius:0px; background:rgba(0,168,120,0.1)"><div style="color:#00a878;font-weight:bold;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">📈 MOOD COUNT 📈</div>' + ''.join([f'<div style="color:#00ff41;margin:4px 0"><strong>{k}</strong>: {v}x</div>' for k, v in counts.items()]) + '</div>', unsafe_allow_html=True)
+        right.markdown('<div style="margin-top:12px" class="card"><b style="color:#1a73e8">Mood Counts</b></div>', unsafe_allow_html=True)
+        right.markdown(' · '.join([f"**{k}**: {v}" for k, v in counts.items()]))
 
     # Dependency checker (non-invasive)
     import importlib.util
@@ -285,5 +278,5 @@ if img_file_buffer is not None:
         right.markdown(f"To install: `pip install {' '.join(missing)}`")
 else:
     left, right = cols[0], cols[1]
-    left.markdown('<div class="card center"><h3 style="color:#ff006e;text-shadow:0 0 15px #ff006e;text-transform:uppercase;letter-spacing:3px">🎬 AWAITING INPUT 🎬</h3><div class="muted" style="margin-top:12px">Click the camera icon to begin emotion detection</div></div>', unsafe_allow_html=True)
-    right.markdown('<div class="card center"><h3 style="color:#ff006e;text-shadow:0 0 15px #ff006e;text-transform:uppercase;letter-spacing:3px">🎵 STANDBY 🎵</h3><div class="muted" style="margin-top:12px">Playlist will appear once your mood is detected</div></div>', unsafe_allow_html=True)
+    left.markdown('<div class="card center"><h3 style="margin:0;color:#1a73e8">Waiting for camera</h3><div class="muted" style="margin-top:8px">Click the camera icon above to begin</div></div>', unsafe_allow_html=True)
+    right.markdown('<div class="card center"><h3 style="margin:0;color:#1a73e8">No playlist yet</h3><div class="muted" style="margin-top:8px">Allow camera to see your mood-matched playlist</div></div>', unsafe_allow_html=True)
