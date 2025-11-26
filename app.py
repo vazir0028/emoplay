@@ -1,3 +1,4 @@
+
 # app.py - EmoPlay: Emotion-Based Music Player
 # Author: Vazir | B.Tech CSE 2025
 
@@ -27,26 +28,12 @@ PLAYLISTS = {
     "disgust":  "https://open.spotify.com/embed/playlist/37i9dQZF1DWYNSmSSRFIWg"   # Heavy
 }
 
-def dummy_face_object_detector():
-    """
-    Dummy detector that randomly decides presence of mask/glasses.
-    Replace with real ML model for production.
-    """
-    # 30% chance that something is on the face
-    return random.random() < 0.3
-
 # Camera input
 img_file = st.camera_input("Take a selfie for automatic mood detection")
 
 if img_file:
     # Display captured image
     st.image(img_file, use_column_width=True)
-
-    # Dummy mask/glasses detection
-    has_face_object = dummy_face_object_detector()
-
-    if has_face_object:
-        st.warning("⚠️ Please remove your mask or glasses for accurate mood detection!")
     
     # Simulate mood detection (full ML version available on Colab)
     mood = random.choice(list(PLAYLISTS.keys()))
