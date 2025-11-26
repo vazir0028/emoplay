@@ -17,9 +17,9 @@ st.set_page_config(
 # To get these, go to Spotify > Share > Embed Playlist > Copy the 'src' URL.
 
 INT_PLAYLISTS = {
-    "happy":    "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
-    "sad":      "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1", # Sad Songs
-    "angry":    "https://open.spotify.com/embed/playlist/37i9dQZF1EIeCX1SSo6M9y", # Rock/Intense
+    "happy":    "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC", # Happy Hits
+    "sad":      "https://open.spotify.com/playlist/3CJyvPkmhFZK3bunJfrzUl", # Sad Songs
+    "angry":    "https://open.spotify.com/playlist/1HcLNscW9GFlGkffYjSCRr", # Rock/Intense
     "neutral":  "https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6", # Chill Vibes
     "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUfTFmNBRM", # Energetic
     "fear":     "https://open.spotify.com/embed/playlist/37i9dQZF1DX9tPFwDMOaN1", # Spooky
