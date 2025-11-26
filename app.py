@@ -4,7 +4,7 @@ import streamlit as st
 import random
 # --- CONFIGURATION ---
 st.set_page_config(
-    page_title="EmoPlay - Music for Your Mood (Bollywood Edition)",
+    page_title="EmoBeats - Music for Your Mood (Bollywood Edition)",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
