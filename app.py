@@ -37,7 +37,7 @@ def analyze_image_for_cv_features(image_file):
     return mood, confidence, mask_present
 # --- END SIMULATION ---
 # --- APP LAYOUT ---
-st.title("EmoPlay 🎶")
+st.title("EmoBeats 🎶")
 st.markdown("### Let your face choose the music")
 # **NEW FEATURE: Genre Selection Radio Button**
 genre_choice = st.radio(
