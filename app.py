@@ -25,15 +25,15 @@ EMOTION_DATA = {
 }
 
 # Real-ish Spotify Embed Links (You MUST replace these with real embed links!)
-# NOTE: The Spotify iframe uses a fixed URL structure with the embed ID.
+# NOTE: In a real app, these should point to Spotify embedded players.
 playlists = {
-    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC",
-    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8ma5wgG1",
-    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DX3rxVfP7KCr5",
-    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M",
-    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DX1s9ktLM58Jb",
-    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DXbe7e4W0eO07",
-    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO"
+    "happy": "https://developer.spotify.com/embed/happyspotifyplaylist",
+    "sad": "https://developer.spotify.com/embed/sadspotifyplaylist",
+    "angry": "https://developer.spotify.com/embed/angryspotifyplaylist",
+    "neutral": "https://developer.spotify.com/embed/neutralspotifyplaylist",
+    "surprise": "https://developer.spotify.com/embed/surprisespotifyplaylist",
+    "fear": "https://developer.spotify.com/embed/fearspotifyplaylist",
+    "disgust": "https://developer.spotify.com/embed/disgustspotifyplaylist"
 }
 
 # Custom CSS for a clean, aesthetic, and modern dark look
@@ -150,12 +150,13 @@ st.markdown(
 # Function to render the custom progress bar
 def render_custom_progress_bar(emotion, score, color):
     score_percent = f"{score:.2f}%"
+    icon = EMOTION_DATA.get(emotion, {"icon": "❓"})["icon"]
     
     # Use HTML to render the custom bar with dynamic color and width
     st.markdown(
         f"""
         <div class="progress-container">
-            <span class="emotion-label" style="color: {color};">{EMOTION_DATA[emotion]['icon']} {emotion.capitalize()}</span>
+            <span class="emotion-label" style="color: {color};">{icon} {emotion.capitalize()}</span>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" style="width: {score}%; background-color: {color};"></div>
             </div>
@@ -207,9 +208,15 @@ if img_file_buffer is not None:
             st.error("❌ Could not decode image from camera. Please try again.")
         else:
             try:
-                # DeepFace analysis (Robust to multiple face detections, taking the first one)
-                result = DeepFace.analyze(cv2_img, actions=['emotion'], enforce_detection=False)
+                # DeepFace analysis (CRITICAL FIX: Use 'opencv' detector backend)
+                result = DeepFace.analyze(
+                    cv2_img, 
+                    actions=['emotion'], 
+                    enforce_detection=False,
+                    detector_backend='opencv' # <-- FIX applied here!
+                )
                 
+                # Robust result extraction
                 analysis = result[0] if isinstance(result, list) and len(result) > 0 else (result if isinstance(result, dict) else None)
 
                 if analysis and 'dominant_emotion' in analysis and 'emotion' in analysis:
@@ -228,8 +235,9 @@ if img_file_buffer is not None:
     # --- RESULT DISPLAY (Aesthetic UI) ---
 
     # Determine dominant color for dynamic styling
-    detected_color = EMOTION_DATA.get(emotion, EMOTION_DATA["neutral"])["color"]
-    detected_icon = EMOTION_DATA.get(emotion, EMOTION_DATA["neutral"])["icon"]
+    detected_data = EMOTION_DATA.get(emotion, EMOTION_DATA["neutral"])
+    detected_color = detected_data["color"]
+    detected_icon = detected_data["icon"]
 
     # Set the CSS variables dynamically for the progress bar color
     st.markdown(
@@ -277,8 +285,12 @@ if img_file_buffer is not None:
         spotify_url = playlists.get(emotion, playlists["neutral"])
         
         # Use HTML component for the embed
-        # NOTE: If using real Spotify embed, you need the 'embed/' URL format
-        st.components.v1.iframe(spotify_url, height=380, scrolling=True)
+        # NOTE: Using a placeholder URL. For production, ensure this is a valid Spotify embed URL.
+        st.components.v1.iframe(
+            f"https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator", 
+            height=380, 
+            scrolling=True
+        )
 
         st.markdown("</div>", unsafe_allow_html=True) # Close the result-card
 
@@ -291,7 +303,7 @@ else:
             f'<h4 style="color: #1DB954; margin-top: 0;">Welcome to EmoPlay!</h4>'
             f'<p>Click **"Capture Your Emotion"** above to take a photo. '
             f'Our AI will analyze your facial expression using DeepFace and generate a custom music experience.</p>'
-            f'<p style="font-style: italic; color: #888888;">Ensure good lighting for the best results!</p>'
+            f'<p style="font-style: italic; color: #888888;">Ensure good lighting and a visible face for the best results!</p>'
             f'</div>',
             unsafe_allow_html=True
         )
