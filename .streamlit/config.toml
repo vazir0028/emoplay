@@ -1,1 +1,4 @@
-
+[runner]
+# Post-install command now includes 'libgl1' to fix the libGL.so.1 error.
+# This forces the installation of all necessary system graphics libraries for OpenCV.
+post_install = "sudo apt-get update && sudo apt-get install -y libsm6 libxrender1 libfontconfig1 libgl1"
