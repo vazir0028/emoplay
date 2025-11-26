@@ -1,7 +1,4 @@
 streamlit
-deepface
-opencv-python-headless
-tf-keras
-pandas
+opencv-python==4.9.0.80
 numpy
-spotipy
+deepface
