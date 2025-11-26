@@ -8,32 +8,31 @@ import numpy as np
 # Set up the Streamlit page configuration
 st.set_page_config(
     page_title="EmoPlay",
-    page_icon="🎧",  # Changed icon for a music focus
+    page_icon="🎧",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # Map emotions to colors and icons for dynamic styling and better visualization
 EMOTION_DATA = {
-    "happy": {"color": "#4CAF50", "icon": "😊"},  # Green
-    "sad": {"color": "#2196F3", "icon": "😔"},    # Blue
-    "angry": {"color": "#F44336", "icon": "😡"},  # Red
-    "neutral": {"color": "#607D8B", "icon": "😐"}, # Slate/Neutral
-    "surprise": {"color": "#FFEB3B", "icon": "😮"}, # Yellow
-    "fear": {"color": "#9C27B0", "icon": "😨"},    # Purple
-    "disgust": {"color": "#009688", "icon": "🤢"}, # Teal
+    "happy": {"color": "#4CAF50", "icon": "😊"},
+    "sad": {"color": "#2196F3", "icon": "😔"},
+    "angry": {"color": "#F44336", "icon": "😡"},
+    "neutral": {"color": "#607D8B", "icon": "😐"},
+    "surprise": {"color": "#FFEB3B", "icon": "😮"},
+    "fear": {"color": "#9C27B0", "icon": "😨"},
+    "disgust": {"color": "#009688", "icon": "🤢"},
 }
 
-# Real-ish Spotify Embed Links (You MUST replace these with real embed links!)
-# NOTE: In a real app, these should point to Spotify embedded players.
+# Placeholder Spotify Embed Links (Replace with real embed links!)
 playlists = {
-    "happy": "https://developer.spotify.com/embed/happyspotifyplaylist",
-    "sad": "https://developer.spotify.com/embed/sadspotifyplaylist",
-    "angry": "https://developer.spotify.com/embed/angryspotifyplaylist",
-    "neutral": "https://developer.spotify.com/embed/neutralspotifyplaylist",
-    "surprise": "https://developer.spotify.com/embed/surprisespotifyplaylist",
-    "fear": "https://developer.spotify.com/embed/fearspotifyplaylist",
-    "disgust": "https://developer.spotify.com/embed/disgustspotifyplaylist"
+    "happy": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
+    "sad": "https://open.spotify.com/embed/playlist/37i9dQZF1DX7qK8qF87n68?utm_source=generator",
+    "angry": "https://open.spotify.com/embed/playlist/37i9dQZF1DX8U9I98BylwD?utm_source=generator",
+    "neutral": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
+    "surprise": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
+    "fear": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
+    "disgust": "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator",
 }
 
 # Custom CSS for a clean, aesthetic, and modern dark look
@@ -42,32 +41,27 @@ st.markdown(
     <style>
     /* Main Background & Fonts */
     .stApp {
-        background-color: #121212; /* Very dark, Spotify-like black */
+        background-color: #121212;
         color: #ffffff;
         font-family: 'Inter', sans-serif;
     }
     
-    /* Header Style - More prominent and centered */
+    /* Header Style */
     .header-style {
-        color: #1DB954; /* Spotify Green Accent */
+        color: #1DB954;
         text-align: center;
         margin-bottom: 20px;
         font-size: 3em;
         font-weight: 700;
         letter-spacing: 1.5px;
-        text-shadow: 0 0 5px rgba(29, 185, 84, 0.4); /* Subtle glow */
+        text-shadow: 0 0 5px rgba(29, 185, 84, 0.4);
     }
 
-    /* Subheader/Description */
-    .stMarkdown p {
-        color: #b3b3b3;
-    }
-
-    /* Card/Box Styling - Introducing depth and subtle lift */
+    /* Card/Box Styling */
     .result-card, .info-card {
         padding: 25px;
         border-radius: 12px;
-        background-color: #1E1E1E; /* Darker grey for card background */
+        background-color: #1E1E1E;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
         margin-top: 15px;
         transition: transform 0.3s ease;
@@ -91,11 +85,11 @@ st.markdown(
         text-transform: uppercase;
         margin: 0;
         letter-spacing: 2px;
-        color: #ffffff; /* White text on color background */
+        color: #ffffff;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     }
     
-    /* Custom Progress Bar Styling (Manual Implementation) */
+    /* Custom Progress Bar Styling */
     .progress-container {
         display: flex;
         align-items: center;
@@ -109,7 +103,7 @@ st.markdown(
     .progress-bar-bg {
         flex-grow: 1;
         height: 10px;
-        background-color: #333333; /* Dark track */
+        background-color: #333333;
         border-radius: 5px;
         margin: 0 10px;
         overflow: hidden;
@@ -124,23 +118,6 @@ st.markdown(
         text-align: right;
         font-weight: 700;
         color: #ffffff;
-    }
-
-    /* Streamlit components overrides for better look */
-    .stButton>button {
-        background-color: #1DB954;
-        color: white;
-        font-weight: bold;
-        border-radius: 8px;
-        border: none;
-        padding: 10px 20px;
-        transition: background-color 0.2s;
-    }
-    .stButton>button:hover {
-        background-color: #1AA84E;
-    }
-    .stCameraInput {
-        text-align: center;
     }
     </style>
     """,
@@ -183,7 +160,6 @@ st.markdown("---")
 col_spacer1, col_camera, col_spacer2 = st.columns([1, 2, 1])
 
 with col_camera:
-    # Use a more engaging subheader for the camera input
     st.markdown('<h3 style="text-align: center; color: #ffffff;">📸 Step 1: Capture Your Mood</h3>', unsafe_allow_html=True)
     img_file_buffer = st.camera_input("Capture Your Emotion")
 
@@ -209,11 +185,12 @@ if img_file_buffer is not None:
         else:
             try:
                 # DeepFace analysis (CRITICAL FIX: Use 'opencv' detector backend)
+                # This bypasses the Keras/RetinaFace version conflict that caused your errors.
                 result = DeepFace.analyze(
                     cv2_img, 
                     actions=['emotion'], 
                     enforce_detection=False,
-                    detector_backend='opencv' # <-- FIX applied here!
+                    detector_backend='opencv' 
                 )
                 
                 # Robust result extraction
@@ -228,7 +205,7 @@ if img_file_buffer is not None:
                 
             except Exception as e:
                 # Catch DeepFace errors (e.g., no face detected)
-                st.warning(f"⚠️ AI couldn't detect a face clearly or failed to analyze. Defaulting to Neutral. Error: {e}")
+                st.warning(f"⚠️ AI couldn't detect a face clearly. Defaulting to Neutral. Error: {e}")
                 emotion = "neutral"
                 
     
@@ -270,7 +247,7 @@ if img_file_buffer is not None:
             color = EMOTION_DATA.get(emo, EMOTION_DATA["neutral"])["color"]
             render_custom_progress_bar(emo, score, color)
         
-        st.markdown(f'</div>', unsafe_allow_html=True) # Close result-card
+        st.markdown(f'</div>', unsafe_allow_html=True)
             
     with col_player:
         
@@ -284,15 +261,14 @@ if img_file_buffer is not None:
         
         spotify_url = playlists.get(emotion, playlists["neutral"])
         
-        # Use HTML component for the embed
-        # NOTE: Using a placeholder URL. For production, ensure this is a valid Spotify embed URL.
+        # Display Spotify Player using the embed link
         st.components.v1.iframe(
-            f"https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator", 
+            spotify_url, 
             height=380, 
             scrolling=True
         )
 
-        st.markdown("</div>", unsafe_allow_html=True) # Close the result-card
+        st.markdown("</div>", unsafe_allow_html=True)
 
 else:
     # Initial state with aesthetic info box
